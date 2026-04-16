@@ -60,14 +60,17 @@
     }
   ],
   "env": {
-    "GEMINI_API_KEY": {
-      "description": "Google Gemini API key for AI features - get from https://makersuite.google.com/app/apikey"
+    "VITE_API_URL": {
+      "description": "Backend API URL (e.g., https://your-pet-fate-api.vercel.app for serverless, or http://localhost:3001 for local dev)"
     },
     "VITE_SUPABASE_URL": {
       "description": "Supabase project URL - found in Project Settings > API"
     },
     "VITE_SUPABASE_ANON_KEY": {
-      "description": "Supabase anonymous key - found in Project Settings > API"
+      "description": "Supabase anonymous (publishable) key - found in Project Settings > API"
+    },
+    "MINIMAX_API_KEY": {
+      "description": "MiniMax API key from your MiniMax subscription token plan"
     }
   },
   "regions": ["hnd1"],
