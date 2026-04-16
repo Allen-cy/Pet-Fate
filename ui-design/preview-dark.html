@@ -1,0 +1,1232 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your Pet Fate — Design System Preview (Dark)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      /* Dark Theme Foundation */
+      --color-surface-container-high: #3d3935;
+      --color-tertiary-fixed-dim: #5c4a32;
+      --color-on-primary: #2b1705;
+      --color-on-surface-variant: #c5bfb8;
+      --color-surface-container-highest: #454139;
+      --color-on-background: #f3f0eb;
+      --color-secondary-fixed: #4a7a34;
+      --color-surface-container-lowest: #252320;
+      --color-inverse-surface: #f3f0eb;
+      --color-error: #ffb4ab;
+      --color-on-secondary: #082100;
+      --color-tertiary-fixed: #6b5430;
+      --color-on-primary-fixed: #ffdcc3;
+      --color-primary: #e6bfa2;
+      --color-on-primary-container: #ffdcc3;
+      --color-on-primary-fixed-variant: #e6bfa2;
+      --color-error-container: #93000a;
+      --color-surface-bright: #1c1c19;
+      --color-background: #1c1c19;
+      --color-surface-dim: #141312;
+      --color-on-error-container: #ffdad6;
+      --color-inverse-primary: #8d6d54;
+      --color-primary-fixed-dim: #5c412b;
+      --color-surface-container-low: #2c2825;
+      --color-on-secondary-fixed: #bff1a0;
+      --color-on-tertiary-fixed: #fedeb3;
+      --color-outline: #958a82;
+      --color-secondary-fixed-dim: #355220;
+      --color-on-tertiary-fixed-variant: #e0c299;
+      --color-tertiary: #d9c4a6;
+      --color-surface-container: #252320;
+      --color-inverse-on-surface: #1c1c19;
+      --color-on-tertiary: #281801;
+      --color-tertiary-container: #6b5430;
+      --color-primary-fixed: #5c412b;
+      --color-secondary: #8dd35f;
+      --color-outline-variant: #4f453f;
+      --color-on-secondary-container: #bff1a0;
+      --color-secondary-container: #285012;
+      --color-on-surface: #f3f0eb;
+      --color-on-error: #690005;
+      --color-on-tertiary-container: #fedeb3;
+      --color-on-secondary-fixed-variant: #a4d486;
+      --color-surface-variant: #4f453f;
+      --color-surface-tint: #e6bfa2;
+      --color-primary-container: #6b5430;
+      --color-surface: #1c1c19;
+
+      /* Category Accents (slightly adjusted for dark) */
+      --cat-cat: #d4b08a;
+      --cat-dog: #8fc96a;
+      --cat-rabbit: #b8a0d8;
+      --cat-small: #d4a850;
+      --cat-fish: #58b8e0;
+      --cat-bird: #b8d858;
+
+      /* Typography */
+      --font-headline: "Noto Serif SC", serif;
+      --font-body: "Plus Jakarta Sans", sans-serif;
+      --font-label: "Plus Jakarta Sans", sans-serif;
+
+      /* Spacing */
+      --space-xs: 0.5rem;
+      --space-sm: 1rem;
+      --space-md: 1.5rem;
+      --space-lg: 3rem;
+      --space-xl: 4rem;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: var(--color-background);
+      color: var(--color-on-surface);
+      font-family: var(--font-body);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .material-symbols-outlined {
+      font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
+      display: inline-block;
+      line-height: 1;
+      vertical-align: middle;
+    }
+
+    /* Layout */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    h1 {
+      font-family: var(--font-headline);
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      color: var(--color-primary);
+    }
+
+    h2 {
+      font-family: var(--font-headline);
+      font-size: 1.75rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      color: var(--color-on-surface);
+    }
+
+    h3 {
+      font-family: var(--font-headline);
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+      color: var(--color-primary);
+    }
+
+    .section {
+      margin-bottom: var(--space-xl);
+      padding-bottom: var(--space-lg);
+      border-bottom: 1px solid var(--color-outline-variant);
+    }
+
+    .section:last-child {
+      border-bottom: none;
+    }
+
+    .subsection {
+      margin-bottom: var(--space-md);
+    }
+
+    .subsection-title {
+      font-family: var(--font-body);
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--color-on-surface-variant);
+      margin-bottom: 1rem;
+    }
+
+    /* Color Swatches */
+    .color-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .color-swatch {
+      border-radius: 1rem;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    }
+
+    .color-swatch-preview {
+      height: 80px;
+      width: 100%;
+    }
+
+    .color-swatch-info {
+      padding: 0.75rem;
+      background: var(--color-surface-container);
+    }
+
+    .color-swatch-name {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--color-on-surface);
+      margin-bottom: 0.25rem;
+      word-break: break-all;
+    }
+
+    .color-swatch-value {
+      font-size: 0.625rem;
+      font-family: monospace;
+      color: var(--color-on-surface-variant);
+    }
+
+    /* Category Swatches */
+    .category-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .category-swatch {
+      border-radius: 1.5rem;
+      overflow: hidden;
+      background: var(--color-surface-container);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    }
+
+    .category-swatch-preview {
+      height: 100px;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3rem;
+    }
+
+    .category-swatch-info {
+      padding: 1rem;
+      text-align: center;
+    }
+
+    .category-swatch-name {
+      font-family: var(--font-headline);
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--color-on-surface);
+      margin-bottom: 0.25rem;
+    }
+
+    .category-swatch-hex {
+      font-size: 0.75rem;
+      font-family: monospace;
+      color: var(--color-on-surface-variant);
+    }
+
+    /* Cards */
+    .card {
+      background: var(--color-surface-container-lowest);
+      border-radius: 3rem;
+      padding: 2rem;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      transition: transform 300ms ease-out;
+    }
+
+    .card:hover {
+      transform: scale(1.02);
+    }
+
+    .card-title {
+      font-family: var(--font-headline);
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--color-primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .card-desc {
+      color: var(--color-on-surface-variant);
+      font-size: 0.875rem;
+      line-height: 1.6;
+    }
+
+    .card-elevated {
+      background: var(--color-surface-container-lowest);
+      border-radius: 3rem;
+      padding: 2rem;
+      box-shadow: 0 32px 64px rgba(0, 0, 0, 0.4);
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 1rem 2.5rem;
+      border-radius: 9999px;
+      font-family: var(--font-body);
+      font-weight: 700;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 300ms ease-out;
+      border: none;
+      text-decoration: none;
+    }
+
+    .btn-primary {
+      background: var(--color-primary);
+      color: var(--color-on-primary);
+      box-shadow: 0 10px 40px rgba(230, 191, 162, 0.15);
+    }
+
+    .btn-primary:hover {
+      transform: scale(1.02);
+      box-shadow: 0 14px 48px rgba(230, 191, 162, 0.2);
+    }
+
+    .btn-primary:active {
+      transform: scale(0.95);
+    }
+
+    .btn-secondary {
+      background: transparent;
+      border: 1px solid var(--color-outline-variant);
+      color: var(--color-primary);
+    }
+
+    .btn-secondary:hover {
+      background: var(--color-surface-container-low);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--color-primary);
+      text-decoration: underline;
+      text-underline-offset: 4px;
+      opacity: 0.8;
+      padding: 1rem;
+    }
+
+    .btn-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      align-items: center;
+      margin-top: 1rem;
+    }
+
+    /* Chips */
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.5rem 1rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      background: var(--color-surface-container-high);
+      color: var(--color-primary);
+      transition: all 300ms ease-out;
+    }
+
+    .chip-active {
+      background: var(--cat-cat);
+      color: var(--color-on-primary);
+    }
+
+    .chip-dog { background: var(--cat-dog); color: var(--color-on-secondary); }
+    .chip-rabbit { background: var(--cat-rabbit); color: var(--color-on-tertiary); }
+    .chip-small { background: var(--cat-small); color: var(--color-on-tertiary); }
+    .chip-fish { background: var(--cat-fish); color: var(--color-on-tertiary); }
+    .chip-bird { background: var(--cat-bird); color: var(--color-on-secondary); }
+
+    .chip-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-top: 1rem;
+    }
+
+    /* Navigation Demo */
+    .nav-demo {
+      position: relative;
+      height: 120px;
+      background: var(--color-surface-dim);
+      border-radius: 1.5rem;
+      overflow: hidden;
+      margin-top: 1rem;
+    }
+
+    .top-nav-demo {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 64px;
+      background: rgba(28, 28, 25, 0.8);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      display: flex;
+      align-items: center;
+      padding: 0 1.5rem;
+      gap: 0.5rem;
+    }
+
+    .top-nav-logo {
+      font-family: var(--font-headline);
+      font-style: italic;
+      font-size: 1.25rem;
+      color: var(--color-primary);
+    }
+
+    .top-nav-links {
+      display: none;
+      margin-left: auto;
+      gap: 2rem;
+    }
+
+    @media (min-width: 768px) {
+      .top-nav-links {
+        display: flex;
+      }
+    }
+
+    .top-nav-link {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--color-primary);
+      text-decoration: none;
+      opacity: 0.6;
+      transition: opacity 200ms;
+    }
+
+    .top-nav-link:hover {
+      opacity: 1;
+    }
+
+    .top-nav-link.active {
+      opacity: 1;
+    }
+
+    .top-nav-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--color-surface-container-high);
+      border: 2px solid var(--color-primary-fixed);
+      margin-left: auto;
+    }
+
+    .bottom-nav-demo {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 80px;
+      background: rgba(28, 28, 25, 0.8);
+      backdrop-filter: blur(40px);
+      -webkit-backdrop-filter: blur(40px);
+      border-radius: 3rem 3rem 0 0;
+      box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.2);
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      padding: 0.75rem 2rem 2rem;
+    }
+
+    .bottom-nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.25rem;
+      padding: 0.5rem 1.5rem;
+      border-radius: 9999px;
+      color: var(--color-primary);
+      opacity: 0.5;
+      transition: all 300ms ease-out;
+      cursor: pointer;
+    }
+
+    .bottom-nav-item.active {
+      background: var(--color-primary);
+      color: var(--color-on-primary);
+      opacity: 1;
+    }
+
+    .bottom-nav-label {
+      font-size: 0.625rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    /* Typography Demo */
+    .type-demo {
+      background: var(--color-surface-container-low);
+      border-radius: 1.5rem;
+      padding: 2rem;
+      margin-top: 1rem;
+    }
+
+    .type-row {
+      margin-bottom: 1.5rem;
+    }
+
+    .type-row:last-child {
+      margin-bottom: 0;
+    }
+
+    .type-label {
+      font-size: 0.625rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--color-on-surface-variant);
+      margin-bottom: 0.5rem;
+    }
+
+    .type-display {
+      font-family: var(--font-headline);
+      font-size: 3rem;
+      font-weight: 700;
+      color: var(--color-primary);
+      line-height: 1.2;
+    }
+
+    .type-headline {
+      font-family: var(--font-headline);
+      font-size: 2rem;
+      font-weight: 600;
+      color: var(--color-on-surface);
+    }
+
+    .type-title {
+      font-family: var(--font-headline);
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--color-primary);
+    }
+
+    .type-body-lg {
+      font-family: var(--font-body);
+      font-size: 1.125rem;
+      color: var(--color-on-surface-variant);
+      line-height: 1.7;
+    }
+
+    .type-body {
+      font-family: var(--font-body);
+      font-size: 1rem;
+      color: var(--color-on-surface-variant);
+      line-height: 1.6;
+    }
+
+    .type-label-md {
+      font-family: var(--font-label);
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--color-primary);
+    }
+
+    /* Progress Bar */
+    .progress-demo {
+      margin-top: 1rem;
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 4px;
+      background: var(--color-surface-container-high);
+      border-radius: 9999px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: var(--color-primary);
+      border-radius: 9999px;
+      transition: width 700ms ease-out;
+    }
+
+    /* Logo Demo */
+    .logo-demo {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+    }
+
+    .logo-icon {
+      font-size: 1.5rem;
+      color: var(--color-primary);
+    }
+
+    .logo-text {
+      font-family: var(--font-headline);
+      font-style: italic;
+      font-size: 1.5rem;
+      letter-spacing: -0.02em;
+      color: var(--color-primary);
+    }
+
+    /* Gradient Demos */
+    .gradient-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .gradient-demo {
+      height: 120px;
+      border-radius: 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: white;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+    }
+
+    .gradient-fate {
+      background: radial-gradient(circle at 50% 30%, #6b4e37 0%, #2c2420 100%);
+    }
+
+    .gradient-fate-bg {
+      background:
+        radial-gradient(circle at top right, rgba(232, 201, 160, 0.2) 0%, transparent 40%),
+        radial-gradient(circle at bottom left, rgba(114, 85, 61, 0.1) 0%, transparent 40%);
+    }
+
+    .gradient-cat-blend {
+      background: linear-gradient(180deg, rgba(44, 36, 32, 0.1) 0%, rgba(107, 78, 55, 0.15) 100%);
+    }
+
+    /* Spacing Demo */
+    .spacing-demo {
+      display: flex;
+      gap: 1rem;
+      align-items: flex-end;
+      margin-top: 1rem;
+    }
+
+    .spacing-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .spacing-box {
+      background: var(--color-primary);
+      border-radius: 0.5rem;
+    }
+
+    .spacing-label {
+      font-size: 0.625rem;
+      font-weight: 600;
+      color: var(--color-on-surface-variant);
+      text-transform: uppercase;
+    }
+
+    /* Header */
+    .page-header {
+      background: var(--color-surface-container);
+      padding: 3rem 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .page-title {
+      font-family: var(--font-headline);
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--color-primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .page-subtitle {
+      color: var(--color-on-surface-variant);
+      font-size: 1rem;
+    }
+
+    /* Responsive Grid */
+    .responsive-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    @media (min-width: 768px) {
+      .responsive-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (min-width: 1024px) {
+      .responsive-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    .grid-item {
+      background: var(--color-surface-container-low);
+      border-radius: 1.5rem;
+      padding: 1.5rem;
+      text-align: center;
+      font-size: 0.875rem;
+      color: var(--color-on-surface-variant);
+    }
+
+    /* Selection Option Demo */
+    .option-demo {
+      width: 100%;
+      padding: 1.5rem;
+      background: var(--color-surface-container-lowest);
+      border-radius: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border: 1px solid transparent;
+      transition: all 300ms ease-out;
+      cursor: pointer;
+      margin-bottom: 0.75rem;
+    }
+
+    .option-demo:hover {
+      background: var(--color-surface-container-high);
+      border-color: rgba(131, 116, 110, 0.15);
+    }
+
+    .option-letter {
+      width: 2.5rem;
+      height: 2.5rem;
+      border-radius: 50%;
+      background: var(--color-surface-container);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      color: var(--color-primary);
+      transition: all 300ms ease-out;
+    }
+
+    .option-demo:hover .option-letter {
+      background: var(--color-primary);
+      color: var(--color-on-primary);
+    }
+
+    .option-text {
+      font-size: 1.125rem;
+      font-weight: 500;
+      color: var(--color-on-surface);
+      flex: 1;
+      margin-left: 1.5rem;
+    }
+
+    .option-arrow {
+      color: var(--color-primary);
+      opacity: 0;
+      transition: opacity 300ms ease-out;
+    }
+
+    .option-demo:hover .option-arrow {
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+  <header class="page-header">
+    <div class="container">
+      <h1 class="page-title">Your Pet Fate — Design System</h1>
+      <p class="page-subtitle">灵魂档案管理员 (Soulful Archivist) — 暗色主题预览</p>
+    </div>
+  </header>
+
+  <main class="container">
+    <!-- Logo -->
+    <section class="section">
+      <h2>品牌标识</h2>
+      <div class="logo-demo">
+        <span class="material-symbols-outlined logo-icon">auto_awesome</span>
+        <span class="logo-text">Your Pet Fate</span>
+      </div>
+    </section>
+
+    <!-- Typography -->
+    <section class="section">
+      <h2>字体系统</h2>
+      <div class="type-demo">
+        <div class="type-row">
+          <div class="type-label">Display-LG / 命运揭晓</div>
+          <div class="type-display">发现命中注定的伙伴</div>
+        </div>
+        <div class="type-row">
+          <div class="type-label">Headline / 页面标题</div>
+          <div class="type-headline">灵魂档案室</div>
+        </div>
+        <div class="type-row">
+          <div class="type-label">Title / 卡片标题</div>
+          <div class="type-title">灵动猫咪</div>
+        </div>
+        <div class="type-row">
+          <div class="type-label">Body-LG / 叙述文字</div>
+          <div class="type-body-lg">每一个生命都有其独特的灵魂频率。通过我们的档案，预见你未来的伴侣。</div>
+        </div>
+        <div class="type-row">
+          <div class="type-label">Body / 正文</div>
+          <div class="type-body">适合寻求安静陪伴、尊重个人空间、且享受细腻情感流动的你。</div>
+        </div>
+        <div class="type-row">
+          <div class="type-label">Label-MD / 标签</div>
+          <div class="type-label-md">The Independent Soul</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Color System -->
+    <section class="section">
+      <h2>色彩系统 — 暗色模式</h2>
+
+      <div class="subsection">
+        <div class="subsection-title">Primary Colors</div>
+        <div class="color-grid">
+          <div class="color-swatch">
+            <div class="color-swatch-preview" style="background: #e6bfa2;"></div>
+            <div class="color-swatch-info">
+              <div class="color-swatch-name">primary</div>
+              <div class="color-swatch-value">#e6bfa2</div>
+            </div>
+          </div>
+          <div class="color-swatch">
+            <div class="color-swatch-preview" style="background: #6b5430;"></div>
+            <div class="color-swatch-info">
+              <div class="color-swatch-name">primary-container</div>
+              <div class="color-swatch-value">#6b5430</div>
+            </div>
+          </div>
+          <div class="color-swatch">
+            <div class="color-swatch-preview" style="background: #5c412b;"></div>
+            <div class="color-swatch-info">
+              <div class="color-swatch-name">primary-fixed</div>
+              <div class="color-swatch-value">#5c412b</div>
+            </div>
+          </div>
+          <div class="color-swatch">
+            <div class="color-swatch-preview" style="background: #8d6d54;"></div>
+            <div class="color-swatch-info">
+              <div class="color-swatch-name">primary-fixed-dim</div>
+              <div class="color-swatch-value">#8d6d54</div>
+            </div>
+          </div>
+          <div class="color-swatch">
+            <div class="color-swatch-preview" style="background: #e6bfa2;"></div>
+            <div class="color-swatch-info">
+              <div class="color-swatch-name">surface-tint</div>
+              <div class="color-swatch-value">#e6bfa2</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="subsection">
+        <div class="subsection-title">Secondary Colors</div>
+        <div class="color-grid">
+          <div class="color-swatch">
+            <div class="color-swatch-preview" style="background: #8dd35f;"></div>
+            <div class="color-swatch-info">
+              <div class="color-swatch-name">secondary</div>
+              <div class="color-swatch-value">#8dd35f</div>
+            </div>
+          </div>
+          <div class="color-swatch">
+            <div class="color-swatch-preview" style="background: #285012;"></div>
+            <div class="color-swatch-info">
+              <div class="color-swatch-name">secondary-container</div>
+              <div class="color-swatch-value">#285012</div>
+            </div>
+          </div>
+          <div class="color-swatch">
+            <div class="color-swatch-preview" style="background: #355220;"></div>
+            <div class="color-swatch-info">
+              <div class="color-swatch-name">secondary-fixed-dim</div>
+              <div class="color-swatch-value">#355220</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="subsection">
+        <div class="subsection-title">Tertiary Colors</div>
+        <div class="color-grid">
+          <div class="color-swatch">
+            <div class="color-swatch-preview" style="background: #d9c4a6;"></div>
+            <div class="color-swatch-info">
+              <div class="color-swatch-name">tertiary</div>
+              <div class="color-swatch-value">#d9c4a6</div>
+            </div>
+          </div>
+          <div class="color-swatch">
+            <div class="color-swatch-preview" style="background: #6b5430;"></div>
+            <div class="color-swatch-info">
+              <div class="color-swatch-name">tertiary-container</div>
+              <div class="color-swatch-value">#6b5430</div>
+            </div>
+          </div>
+          <div class="color-swatch">
+            <div class="color-swatch-preview" style="background: #6b5430;"></div>
+            <div class="color-swatch-info">
+              <div class="color-swatch-name">tertiary-fixed</div>
+              <div class="color-swatch-value">#6b5430</div>
+            </div>
+          </div>
+          <div class="color-swatch">
+            <div class="color-swatch-preview" style="background: #5c4a32;"></div>
+            <div class="color-swatch-info">
+              <div class="color-swatch-name">tertiary-fixed-dim</div>
+              <div class="color-swatch-value">#5c4a32</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="subsection">
+        <div class="subsection-title">Neutral Colors</div>
+        <div class="color-grid">
+          <div class="color-swatch">
+            <div class="color-swatch-preview" style="background: #1c1c19;"></div>
+            <div class="color-swatch-info">
+              <div class="color-swatch-name">background / surface</div>
+              <div class="color-swatch-value">#1c1c19</div>
+            </div>
+          </div>
+          <div class="color-swatch">
+            <div class="color-swatch-preview" style="background: #2c2825;"></div>
+            <div class="color-swatch-info">
+              <div class="color-swatch-name">surface-container-low</div>
+              <div class="color-swatch-value">#2c2825</div>
+            </div>
+          </div>
+          <div class="color-swatch">
+            <div class="color-swatch-preview" style="background: #3d3935;"></div>
+            <div class="color-swatch-info">
+              <div class="color-swatch-name">surface-container-high</div>
+              <div class="color-swatch-value">#3d3935</div>
+            </div>
+          </div>
+          <div class="color-swatch">
+            <div class="color-swatch-preview" style="background: #252320;"></div>
+            <div class="color-swatch-info">
+              <div class="color-swatch-name">surface-container-lowest</div>
+              <div class="color-swatch-value">#252320</div>
+            </div>
+          </div>
+          <div class="color-swatch">
+            <div class="color-swatch-preview" style="background: #f3f0eb;"></div>
+            <div class="color-swatch-info">
+              <div class="color-swatch-name">on-surface / on-background</div>
+              <div class="color-swatch-value">#f3f0eb</div>
+            </div>
+          </div>
+          <div class="color-swatch">
+            <div class="color-swatch-preview" style="background: #c5bfb8;"></div>
+            <div class="color-swatch-info">
+              <div class="color-swatch-name">on-surface-variant</div>
+              <div class="color-swatch-value">#c5bfb8</div>
+            </div>
+          </div>
+          <div class="color-swatch">
+            <div class="color-swatch-preview" style="background: #958a82;"></div>
+            <div class="color-swatch-info">
+              <div class="color-swatch-name">outline</div>
+              <div class="color-swatch-value">#958a82</div>
+            </div>
+          </div>
+          <div class="color-swatch">
+            <div class="color-swatch-preview" style="background: #4f453f;"></div>
+            <div class="color-swatch-info">
+              <div class="color-swatch-name">outline-variant</div>
+              <div class="color-swatch-value">#4f453f</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="subsection">
+        <div class="subsection-title">Functional Colors</div>
+        <div class="color-grid">
+          <div class="color-swatch">
+            <div class="color-swatch-preview" style="background: #ffb4ab;"></div>
+            <div class="color-swatch-info">
+              <div class="color-swatch-name">error</div>
+              <div class="color-swatch-value">#ffb4ab</div>
+            </div>
+          </div>
+          <div class="color-swatch">
+            <div class="color-swatch-preview" style="background: #93000a;"></div>
+            <div class="color-swatch-info">
+              <div class="color-swatch-name">error-container</div>
+              <div class="color-swatch-value">#93000a</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Category Accents -->
+    <section class="section">
+      <h2>宠物类别强调色</h2>
+      <div class="category-grid">
+        <div class="category-swatch">
+          <div class="category-swatch-preview" style="background: #d4b08a;">🐱</div>
+          <div class="category-swatch-info">
+            <div class="category-swatch-name">猫 (Cats)</div>
+            <div class="category-swatch-hex">#d4b08a</div>
+          </div>
+        </div>
+        <div class="category-swatch">
+          <div class="category-swatch-preview" style="background: #8fc96a;">🐕</div>
+          <div class="category-swatch-info">
+            <div class="category-swatch-name">狗 (Dogs)</div>
+            <div class="category-swatch-hex">#8fc96a</div>
+          </div>
+        </div>
+        <div class="category-swatch">
+          <div class="category-swatch-preview" style="background: #b8a0d8;">🐰</div>
+          <div class="category-swatch-info">
+            <div class="category-swatch-name">兔 (Rabbits)</div>
+            <div class="category-swatch-hex">#b8a0d8</div>
+          </div>
+        </div>
+        <div class="category-swatch">
+          <div class="category-swatch-preview" style="background: #d4a850;">🐹</div>
+          <div class="category-swatch-info">
+            <div class="category-swatch-name">小动物</div>
+            <div class="category-swatch-hex">#d4a850</div>
+          </div>
+        </div>
+        <div class="category-swatch">
+          <div class="category-swatch-preview" style="background: #58b8e0;">🐟</div>
+          <div class="category-swatch-info">
+            <div class="category-swatch-name">鱼 (Fish)</div>
+            <div class="category-swatch-hex">#58b8e0</div>
+          </div>
+        </div>
+        <div class="category-swatch">
+          <div class="category-swatch-preview" style="background: #b8d858;">🐦</div>
+          <div class="category-swatch-info">
+            <div class="category-swatch-name">鸟 (Birds)</div>
+            <div class="category-swatch-hex">#b8d858</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Gradients -->
+    <section class="section">
+      <h2>渐变</h2>
+      <div class="gradient-grid">
+        <div class="gradient-demo gradient-fate">fate-gradient</div>
+        <div class="gradient-demo gradient-fate-bg" style="color: var(--color-primary); text-shadow: none;">fate-gradient-bg</div>
+        <div class="gradient-demo gradient-cat-blend" style="color: var(--color-primary); text-shadow: none;">cat-category-blend</div>
+      </div>
+    </section>
+
+    <!-- Buttons -->
+    <section class="section">
+      <h2>按钮</h2>
+      <div class="subsection">
+        <div class="subsection-title">Primary Button</div>
+        <div class="btn-group">
+          <button class="btn btn-primary">
+            <span class="material-symbols-outlined">pets</span>
+            开始缘分测试
+          </button>
+        </div>
+      </div>
+      <div class="subsection">
+        <div class="subsection-title">Secondary Button</div>
+        <div class="btn-group">
+          <button class="btn btn-secondary">探索图鉴</button>
+        </div>
+      </div>
+      <div class="subsection">
+        <div class="subsection-title">Ghost Button</div>
+        <div class="btn-group">
+          <button class="btn btn-ghost">查看命运之契</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Chips -->
+    <section class="section">
+      <h2>选择 Chips / 标签</h2>
+      <div class="subsection">
+        <div class="subsection-title">Default State</div>
+        <div class="chip-group">
+          <span class="chip">灵性感应</span>
+          <span class="chip">独立边界</span>
+          <span class="chip">深情内敛</span>
+        </div>
+      </div>
+      <div class="subsection">
+        <div class="subsection-title">Active States (Category Colors)</div>
+        <div class="chip-group">
+          <span class="chip chip-active">优雅神秘</span>
+          <span class="chip chip-dog">活力热情</span>
+          <span class="chip chip-rabbit">温柔可爱</span>
+          <span class="chip chip-small">活泼好动</span>
+          <span class="chip chip-fish">安静祥和</span>
+          <span class="chip chip-bird">自由灵动</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Cards -->
+    <section class="section">
+      <h2>卡片</h2>
+      <div class="responsive-grid">
+        <div class="card">
+          <div class="card-title">灵动猫咪</div>
+          <p class="card-desc">适合寻求安静陪伴、尊重个人空间、且享受细腻情感流动的你。</p>
+        </div>
+        <div class="card-elevated">
+          <div class="card-title"> Elevated Card</div>
+          <p class="card-desc">使用更强的阴影实现"浮动"效果。</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Navigation -->
+    <section class="section">
+      <h2>导航组件</h2>
+      <div class="subsection">
+        <div class="subsection-title">Top Navigation</div>
+        <div class="nav-demo">
+          <div class="top-nav-demo">
+            <span class="material-symbols-outlined" style="color: var(--color-primary);">auto_awesome</span>
+            <span class="top-nav-logo">Your Pet Fate</span>
+            <nav class="top-nav-links">
+              <a href="#" class="top-nav-link active">Home</a>
+              <a href="#" class="top-nav-link">History</a>
+              <a href="#" class="top-nav-link">Profile</a>
+            </nav>
+            <div class="top-nav-avatar"></div>
+          </div>
+        </div>
+      </div>
+      <div class="subsection">
+        <div class="subsection-title">Bottom Navigation (Mobile)</div>
+        <div class="nav-demo">
+          <div class="bottom-nav-demo">
+            <div class="bottom-nav-item active">
+              <span class="material-symbols-outlined">auto_stories</span>
+              <span class="bottom-nav-label">Home</span>
+            </div>
+            <div class="bottom-nav-item">
+              <span class="material-symbols-outlined">history_edu</span>
+              <span class="bottom-nav-label">History</span>
+            </div>
+            <div class="bottom-nav-item">
+              <span class="material-symbols-outlined">person_pin</span>
+              <span class="bottom-nav-label">Profile</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Progress Bar -->
+    <section class="section">
+      <h2>进度条</h2>
+      <div class="subsection">
+        <div class="subsection-title">Question Progress</div>
+        <div class="progress-demo">
+          <div style="margin-bottom: 0.5rem; font-size: 0.75rem; color: var(--color-on-surface-variant);">Question 01 / 18</div>
+          <div class="progress-bar">
+            <div class="progress-fill" style="width: 5.5%;"></div>
+          </div>
+        </div>
+        <div class="progress-demo" style="margin-top: 1rem;">
+          <div class="progress-bar">
+            <div class="progress-fill" style="width: 50%;"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Selection Options -->
+    <section class="section">
+      <h2>题目选项</h2>
+      <div class="option-demo">
+        <div class="option-letter">A</div>
+        <span class="option-text">非常规律，像精密运行的钟表</span>
+        <span class="material-symbols-outlined option-arrow">arrow_forward</span>
+      </div>
+      <div class="option-demo">
+        <div class="option-letter">B</div>
+        <span class="option-text">大致规律，偶尔会有些小惊喜</span>
+        <span class="material-symbols-outlined option-arrow">arrow_forward</span>
+      </div>
+    </section>
+
+    <!-- Spacing -->
+    <section class="section">
+      <h2>间距系统</h2>
+      <div class="spacing-demo">
+        <div class="spacing-item">
+          <div class="spacing-box" style="width: 8px; height: 8px;"></div>
+          <span class="spacing-label">xs (8px)</span>
+        </div>
+        <div class="spacing-item">
+          <div class="spacing-box" style="width: 16px; height: 16px;"></div>
+          <span class="spacing-label">sm (16px)</span>
+        </div>
+        <div class="spacing-item">
+          <div class="spacing-box" style="width: 24px; height: 24px;"></div>
+          <span class="spacing-label">md (24px)</span>
+        </div>
+        <div class="spacing-item">
+          <div class="spacing-box" style="width: 48px; height: 48px;"></div>
+          <span class="spacing-label">lg (48px)</span>
+        </div>
+        <div class="spacing-item">
+          <div class="spacing-box" style="width: 64px; height: 64px;"></div>
+          <span class="spacing-label">xl (64px)</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Responsive -->
+    <section class="section">
+      <h2>响应式断点</h2>
+      <div class="responsive-grid">
+        <div class="grid-item">默认: &lt; 768px</div>
+        <div class="grid-item">md: ≥ 768px</div>
+        <div class="grid-item">lg: ≥ 1024px</div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
