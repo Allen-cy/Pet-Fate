@@ -10,7 +10,8 @@ export interface GeneratedReport {
   prophecy: string;        // 契合预言
 }
 
-// 宠物中文名映射
+// Gemini API key for fallback
+const GEMINI_API_KEY = process.env.GEMINI_API_KEY || "AIzaSyDSGCxAss02F1D711jBg5REzz14Z_k5FyY";
 const PET_NAMES: Record<string, string> = {
   dog: "狗",
   cat: "猫",
@@ -113,60 +114,123 @@ export async function generatePetReport(
 
 请直接输出JSON，不要有其他内容。`;
 
-  const response = await fetch("https://api.minimax.chat/v1/text/chatcompletion_v2", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "Authorization": `Bearer ${process.env.MINIMAX_API_KEY}`,
-    },
-    body: JSON.stringify({
-      model: "MiniMax-M2.7",
-      messages: [
-        {
-          role: "user",
-          content: prompt,
+  // ========== 尝试 MiniMax (主模型) ==========
+  let lastMiniMaxError: Error | null = null;
+
+  for (let attempt = 1; attempt <= 3; attempt++) {
+    try {
+      const response = await fetch("https://api.minimax.chat/v1/text/chatcompletion_v2", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${process.env.MINIMAX_API_KEY}`,
         },
-      ],
-      max_tokens: 2000,
-      temperature: 0.8,
-      response_format: {
-        type: "json_object",
-      },
-    }),
-  });
+        body: JSON.stringify({
+          model: "MiniMax-M2.7",
+          messages: [{ role: "user", content: prompt }],
+          max_tokens: 2000,
+          temperature: 0.8,
+          response_format: { type: "json_object" },
+        }),
+      });
 
-  if (!response.ok) {
-    const errorText = await response.text();
-    throw new Error(`MiniMax API error: ${response.status} ${errorText}`);
+      if (!response.ok) {
+        const errorText = await response.text();
+        if (response.status === 529 && attempt < 3) {
+          console.log(`MiniMax overloaded (attempt ${attempt}/3), retrying in 3s...`);
+          await new Promise(r => setTimeout(r, 3000));
+          continue;
+        }
+        throw new Error(`MiniMax API error: ${response.status} ${errorText}`);
+      }
+
+      const data = await response.json() as {
+        choices?: Array<{ message?: { content?: string } }>;
+      };
+
+      const reply = data.choices?.[0]?.message?.content ?? "{}";
+      const parsed = JSON.parse(parseJsonReply(reply));
+
+      return {
+        typeName: parsed.typeName ?? "缘分待续",
+        whyFit: parsed.whyFit ?? "",
+        dailyScene: parsed.dailyScene ?? "",
+        reminder: parsed.reminder ?? "",
+        keywords: Array.isArray(parsed.keywords) ? parsed.keywords : [],
+        personalityBase: parsed.personalityBase ?? "",
+        prophecy: parsed.prophecy ?? "",
+      };
+    } catch (err) {
+      lastMiniMaxError = err instanceof Error ? err : new Error(String(err));
+      if (attempt < 3) {
+        console.log(`MiniMax attempt ${attempt} failed, retrying...`);
+        await new Promise(r => setTimeout(r, 3000));
+      }
+    }
   }
 
-  const data = await response.json() as {
-    choices?: Array<{ message?: { content?: string } }>;
-    errors?: string[];
-  };
+  // ========== MiniMax 失败，尝试 Gemini (备用模型) ==========
+  console.log("MiniMax failed, falling back to Gemini...");
 
-  const reply = data.choices?.[0]?.message?.content ?? "{}";
+  for (let geminiAttempt = 1; geminiAttempt <= 3; geminiAttempt++) {
+    try {
+      const geminiResponse = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_API_KEY}`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            contents: [{ parts: [{ text: prompt }] }],
+            generationConfig: { responseMimeType: "application/json", maxOutputTokens: 2000 },
+          }),
+        }
+      );
 
-  // 去掉 markdown 代码块标记
-  let cleanReply = reply.trim();
-  if (cleanReply.startsWith("```json")) {
-    cleanReply = cleanReply.slice(7);
-  } else if (cleanReply.startsWith("```")) {
-    cleanReply = cleanReply.slice(3);
+      if (!geminiResponse.ok) {
+        const errText = await geminiResponse.text();
+        const errJson = JSON.parse(errText);
+        // 503 = model overloaded, retry
+        if (geminiResponse.status === 503 && geminiAttempt < 3) {
+          console.log(`Gemini overloaded (attempt ${geminiAttempt}/3), retrying in 5s...`);
+          await new Promise(r => setTimeout(r, 5000));
+          continue;
+        }
+        throw new Error(`Gemini API error: ${geminiResponse.status} ${errJson.error?.message || errText}`);
+      }
+
+      const geminiData = await geminiResponse.json() as {
+        candidates?: Array<{ content?: { parts?: Array<{ text?: string }> } }>;
+      };
+
+      const geminiReply = geminiData.candidates?.[0]?.content?.parts?.[0]?.text ?? "{}";
+      const parsed = JSON.parse(parseJsonReply(geminiReply));
+
+      return {
+        typeName: parsed.typeName ?? "缘分待续",
+        whyFit: parsed.whyFit ?? "",
+        dailyScene: parsed.dailyScene ?? "",
+        reminder: parsed.reminder ?? "",
+        keywords: Array.isArray(parsed.keywords) ? parsed.keywords : [],
+        personalityBase: parsed.personalityBase ?? "",
+        prophecy: parsed.prophecy ?? "",
+      };
+    } catch (geminiErr) {
+      lastMiniMaxError = geminiErr instanceof Error ? geminiErr : new Error(String(geminiErr));
+      if (geminiAttempt < 3) {
+        console.log(`Gemini attempt ${geminiAttempt} failed, retrying...`);
+        await new Promise(r => setTimeout(r, 5000));
+      }
+    }
   }
-  if (cleanReply.endsWith("```")) {
-    cleanReply = cleanReply.slice(0, -3);
-  }
 
-  const parsed = JSON.parse(cleanReply.trim());
+  throw lastMiniMaxError || new Error("All AI providers failed");
+}
 
-  return {
-    typeName: parsed.typeName ?? "缘分待续",
-    whyFit: parsed.whyFit ?? "",
-    dailyScene: parsed.dailyScene ?? "",
-    reminder: parsed.reminder ?? "",
-    keywords: Array.isArray(parsed.keywords) ? parsed.keywords : [],
-    personalityBase: parsed.personalityBase ?? "",
-    prophecy: parsed.prophecy ?? "",
-  };
+// 解析 JSON 字符串，去掉 markdown 代码块标记
+function parseJsonReply(reply: string): string {
+  let clean = reply.trim();
+  if (clean.startsWith("```json")) clean = clean.slice(7);
+  else if (clean.startsWith("```")) clean = clean.slice(3);
+  if (clean.endsWith("```")) clean = clean.slice(0, -3);
+  return clean.trim();
 }
