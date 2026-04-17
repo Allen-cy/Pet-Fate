@@ -114,8 +114,60 @@ export async function generatePetReport(
 
 请直接输出JSON，不要有其他内容。`;
 
-  // ========== 尝试 MiniMax (主模型) ==========
-  let lastMiniMaxError: Error | null = null;
+  // ========== 优先尝试 Gemini (更稳定) ==========
+  let lastError: Error | null = null;
+
+  for (let attempt = 1; attempt <= 3; attempt++) {
+    try {
+      const geminiResponse = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_API_KEY}`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            contents: [{ parts: [{ text: prompt }] }],
+            generationConfig: { responseMimeType: "application/json", maxOutputTokens: 2000 },
+          }),
+        }
+      );
+
+      if (!geminiResponse.ok) {
+        const errText = await geminiResponse.text();
+        if (geminiResponse.status === 503 && attempt < 3) {
+          console.log(`Gemini overloaded (attempt ${attempt}/3), retrying in 3s...`);
+          await new Promise(r => setTimeout(r, 3000));
+          continue;
+        }
+        throw new Error(`Gemini API error: ${geminiResponse.status} ${errText}`);
+      }
+
+      const geminiData = await geminiResponse.json() as {
+        candidates?: Array<{ content?: { parts?: Array<{ text?: string }> } }>;
+      };
+
+      const geminiReply = geminiData.candidates?.[0]?.content?.parts?.[0]?.text ?? "{}";
+      const parsed = JSON.parse(parseJsonReply(geminiReply));
+
+      return {
+        typeName: parsed.typeName ?? "缘分待续",
+        whyFit: parsed.whyFit ?? "",
+        dailyScene: parsed.dailyScene ?? "",
+        reminder: parsed.reminder ?? "",
+        keywords: Array.isArray(parsed.keywords) ? parsed.keywords : [],
+        personalityBase: parsed.personalityBase ?? "",
+        prophecy: parsed.prophecy ?? "",
+      };
+    } catch (err) {
+      lastError = err instanceof Error ? err : new Error(String(err));
+      if (attempt < 3) {
+        console.log(`Gemini attempt ${attempt} failed, retrying...`);
+        await new Promise(r => setTimeout(r, 3000));
+      }
+    }
+  }
+
+  // ========== Gemini 失败，尝试 MiniMax (备用) ==========
+  console.log("Gemini failed, falling back to MiniMax...");
 
   for (let attempt = 1; attempt <= 3; attempt++) {
     try {
@@ -161,7 +213,7 @@ export async function generatePetReport(
         prophecy: parsed.prophecy ?? "",
       };
     } catch (err) {
-      lastMiniMaxError = err instanceof Error ? err : new Error(String(err));
+      lastError = err instanceof Error ? err : new Error(String(err));
       if (attempt < 3) {
         console.log(`MiniMax attempt ${attempt} failed, retrying...`);
         await new Promise(r => setTimeout(r, 3000));
@@ -169,61 +221,7 @@ export async function generatePetReport(
     }
   }
 
-  // ========== MiniMax 失败，尝试 Gemini (备用模型) ==========
-  console.log("MiniMax failed, falling back to Gemini...");
-
-  for (let geminiAttempt = 1; geminiAttempt <= 3; geminiAttempt++) {
-    try {
-      const geminiResponse = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_API_KEY}`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            contents: [{ parts: [{ text: prompt }] }],
-            generationConfig: { responseMimeType: "application/json", maxOutputTokens: 2000 },
-          }),
-        }
-      );
-
-      if (!geminiResponse.ok) {
-        const errText = await geminiResponse.text();
-        const errJson = JSON.parse(errText);
-        // 503 = model overloaded, retry
-        if (geminiResponse.status === 503 && geminiAttempt < 3) {
-          console.log(`Gemini overloaded (attempt ${geminiAttempt}/3), retrying in 5s...`);
-          await new Promise(r => setTimeout(r, 5000));
-          continue;
-        }
-        throw new Error(`Gemini API error: ${geminiResponse.status} ${errJson.error?.message || errText}`);
-      }
-
-      const geminiData = await geminiResponse.json() as {
-        candidates?: Array<{ content?: { parts?: Array<{ text?: string }> } }>;
-      };
-
-      const geminiReply = geminiData.candidates?.[0]?.content?.parts?.[0]?.text ?? "{}";
-      const parsed = JSON.parse(parseJsonReply(geminiReply));
-
-      return {
-        typeName: parsed.typeName ?? "缘分待续",
-        whyFit: parsed.whyFit ?? "",
-        dailyScene: parsed.dailyScene ?? "",
-        reminder: parsed.reminder ?? "",
-        keywords: Array.isArray(parsed.keywords) ? parsed.keywords : [],
-        personalityBase: parsed.personalityBase ?? "",
-        prophecy: parsed.prophecy ?? "",
-      };
-    } catch (geminiErr) {
-      lastMiniMaxError = geminiErr instanceof Error ? geminiErr : new Error(String(geminiErr));
-      if (geminiAttempt < 3) {
-        console.log(`Gemini attempt ${geminiAttempt} failed, retrying...`);
-        await new Promise(r => setTimeout(r, 5000));
-      }
-    }
-  }
-
-  throw lastMiniMaxError || new Error("All AI providers failed");
+  throw lastError || new Error("All AI providers failed");
 }
 
 // 解析 JSON 字符串，去掉 markdown 代码块标记

@@ -159,6 +159,23 @@ export default function Question() {
             <p className="text-primary font-body">正在提交答案...</p>
           </div>
         )}
+
+        {/* 最后一题底部悬浮提交按钮 */}
+        {isLastQuestion && !isSubmitting && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50"
+          >
+            <button
+              onClick={() => handleAnswer(answers.length > 0 ? answers[answers.length - 1].optionIndex : 0)}
+              className="bg-primary text-on-primary px-12 py-5 rounded-full font-bold text-lg shadow-xl shadow-primary/20 flex items-center gap-3 hover:scale-[1.02] active:scale-95 transition-all"
+            >
+              <span className="material-symbols-outlined">check</span>
+              查看我的缘分报告
+            </button>
+          </motion.div>
+        )}
       </main>
 
       <div className="fixed inset-0 -z-10 pointer-events-none overflow-hidden">
