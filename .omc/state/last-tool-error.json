@@ -1,0 +1,7 @@
+{
+  "tool_name": "Bash",
+  "tool_input_preview": "{\"command\":\"cd /Users/allen/Desktop/your-pet-fatev2/server && npx tsx -e \\\"\\nimport { calculateScores, getWinningPetType } from './services/scoring.js';\\nconst answers = [{questionId:'1',optionId:'A'}...",
+  "error": "Exit code 1\n/Users/allen/Desktop/your-pet-fatev2/server/node_modules/tsx/dist/register-D46fvsV_.cjs:3\n`)},\"createLog\"),x=I(g.bgLightYellow(g.black(\" CJS \"))),ae=I(g.bgBlue(\" ESM \")),oe=[\".cts\",\".mts\",\".ts\",\".tsx\",\".jsx\"],ie=[\".js\",\".cjs\",\".mjs\"],k=[\".ts\",\".tsx\",\".jsx\"],F=o((s,e,r,n)=>{const t=Object.getOwnPropertyDescriptor(s,e);t?.set?s[e]=r:(!t||t.configurable)&&Object.defineProperty(s,e,{value:r,enumerable:t?.enumerable||n?.enumerable,writable:n?.writable??(t?t.writable:!0),configurable:n?.co...",
+  "timestamp": "2026-04-17T05:26:31.807Z",
+  "retry_count": 1
+}

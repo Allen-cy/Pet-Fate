@@ -72,8 +72,15 @@ export default function Question() {
                 Your Pet Fate
               </span>
             </div>
-            <div className="font-body font-bold text-xs tracking-widest text-primary/60 uppercase">
-              Question {String(currentIndex + 1).padStart(2, '0')} / {questions.length}
+            <div className="flex items-center gap-3">
+              <div className="bg-tertiary-fixed/20 px-3 py-1 rounded-full">
+                <span className="text-xs text-tertiary font-label uppercase tracking-widest">
+                  AI: Gemini 2.5 Flash
+                </span>
+              </div>
+              <div className="font-body font-bold text-xs tracking-widest text-primary/60 uppercase">
+                Question {String(currentIndex + 1).padStart(2, '0')} / {questions.length}
+              </div>
             </div>
           </div>
           <div className="w-full h-1 bg-surface-container-high rounded-full overflow-hidden">
