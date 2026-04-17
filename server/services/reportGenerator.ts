@@ -8,6 +8,7 @@ export interface GeneratedReport {
   keywords: string[];     // 铲屎官人格关键词
   personalityBase: string; // 性格底色
   prophecy: string;        // 契合预言
+  aiModel?: string;        // 使用的AI模型名称
 }
 
 // Gemini API key for fallback
@@ -156,6 +157,7 @@ export async function generatePetReport(
         keywords: Array.isArray(parsed.keywords) ? parsed.keywords : [],
         personalityBase: parsed.personalityBase ?? "",
         prophecy: parsed.prophecy ?? "",
+        aiModel: "gemini-2.5-flash",
       };
     } catch (err) {
       lastError = err instanceof Error ? err : new Error(String(err));
@@ -211,6 +213,7 @@ export async function generatePetReport(
         keywords: Array.isArray(parsed.keywords) ? parsed.keywords : [],
         personalityBase: parsed.personalityBase ?? "",
         prophecy: parsed.prophecy ?? "",
+        aiModel: "MiniMax-M2.7",
       };
     } catch (err) {
       lastError = err instanceof Error ? err : new Error(String(err));

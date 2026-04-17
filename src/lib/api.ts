@@ -50,6 +50,7 @@ export interface ReportResponse {
   keywords?: string[];
   personality_base?: string;
   prophecy?: string;
+  ai_model?: string;
   created_at?: string;
 }
 

@@ -119,6 +119,11 @@ export default function Report() {
         <div className="inline-block px-4 py-1 bg-surface-container-high rounded-full text-primary font-label text-[10px] uppercase tracking-widest font-bold mb-4">
           Exclusive AI Analysis
         </div>
+        {report?.ai_model && (
+          <div className="inline-block px-3 py-1 bg-tertiary-fixed/20 rounded-full text-tertiary font-label text-[10px] uppercase tracking-widest mb-4">
+            AI Model: {report.ai_model}
+          </div>
+        )}
         <h1 className="font-headline text-5xl md:text-6xl text-primary leading-tight tracking-tight mb-6">
           你的专属缘分报告
         </h1>
