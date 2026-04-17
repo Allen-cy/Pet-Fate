@@ -26,7 +26,7 @@
           "value": "public, max-age=31536000, immutable"
         }
       ]
-    },
+    }
   ],
   "regions": ["hnd1"],
   "trailingSlash": false,
