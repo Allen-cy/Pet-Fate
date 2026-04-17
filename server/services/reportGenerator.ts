@@ -120,7 +120,7 @@ export async function generatePetReport(
       "Authorization": `Bearer ${process.env.MINIMAX_API_KEY}`,
     },
     body: JSON.stringify({
-      model: "MiniMax-Text-01",
+      model: "MiniMax-M2.7",
       messages: [
         {
           role: "user",
@@ -146,7 +146,19 @@ export async function generatePetReport(
   };
 
   const reply = data.choices?.[0]?.message?.content ?? "{}";
-  const parsed = JSON.parse(reply);
+
+  // 去掉 markdown 代码块标记
+  let cleanReply = reply.trim();
+  if (cleanReply.startsWith("```json")) {
+    cleanReply = cleanReply.slice(7);
+  } else if (cleanReply.startsWith("```")) {
+    cleanReply = cleanReply.slice(3);
+  }
+  if (cleanReply.endsWith("```")) {
+    cleanReply = cleanReply.slice(0, -3);
+  }
+
+  const parsed = JSON.parse(cleanReply.trim());
 
   return {
     typeName: parsed.typeName ?? "缘分待续",

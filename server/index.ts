@@ -37,7 +37,8 @@ app.post("/api/session", async (req, res) => {
     });
   } catch (error) {
     console.error("Error creating session:", error);
-    return res.status(500).json({ error: "Failed to create session" });
+    const message = error instanceof Error ? error.message : String(error);
+    return res.status(500).json({ error: "Failed to create session", details: message });
   }
 });
 
