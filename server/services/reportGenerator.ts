@@ -1,46 +1,117 @@
 import type { DimScores } from "../data/questions";
 
 export interface GeneratedReport {
-  typeName: string;
-  whyFit: string;
-  dailyScene: string;
-  reminder: string;
-  keywords: string[];
+  typeName: string;       // 缘分类型名
+  whyFit: string;          // 为什么适合你
+  dailyScene: string;      // 日常场景
+  reminder: string;       // 养宠提醒
+  keywords: string[];     // 铲屎官人格关键词
+  personalityBase: string; // 性格底色
+  prophecy: string;        // 契合预言
+}
+
+// 宠物中文名映射
+const PET_NAMES: Record<string, string> = {
+  dog: "狗",
+  cat: "猫",
+  rabbit: "兔子",
+  small: "小型宠物",
+  fish: "鱼/爬行类",
+  bird: "鸟",
+};
+
+// 计算总分用于分析
+function calcTotals(dimScores: DimScores) {
+  return {
+    dog: dimScores.A.dog + dimScores.B.dog + dimScores.C.dog + dimScores.D.dog,
+    cat: dimScores.A.cat + dimScores.B.cat + dimScores.C.cat + dimScores.D.cat,
+    rabbit: dimScores.A.rabbit + dimScores.B.rabbit + dimScores.C.rabbit + dimScores.D.rabbit,
+    small: dimScores.A.small + dimScores.B.small + dimScores.C.small + dimScores.D.small,
+    fish: dimScores.A.fish + dimScores.B.fish + dimScores.C.fish + dimScores.D.fish,
+    bird: dimScores.A.bird + dimScores.B.bird + dimScores.C.bird + dimScores.D.bird,
+  };
+}
+
+// 分析得分特征，用于个性化 Prompt
+function analyzeTraits(pet: string, dimScores: DimScores) {
+  const totals = calcTotals(dimScores);
+  const a = dimScores.A[pet as keyof typeof dimScores.A];
+  const b = dimScores.B[pet as keyof typeof dimScores.B];
+  const c = dimScores.C[pet as keyof typeof dimScores.C];
+  const d = dimScores.D[pet as keyof typeof dimScores.D];
+
+  const traits: string[] = [];
+
+  // A维度分析（生活方式）
+  if (a >= 10) traits.push("生活习惯非常规律有序");
+  else if (a >= 7) traits.push("生活方式节奏适中");
+  else if (a <= 4) traits.push("喜欢随性自在的生活节奏");
+
+  // B维度分析（情感需求）
+  if (b >= 8) traits.push("情感需求较高，渴望深度陪伴");
+  else if (b >= 5) traits.push("需要适度的情感交流");
+  else traits.push("情感上相对独立，不强求亲密");
+
+  // C维度分析（性格特质）
+  if (c >= 10) traits.push("性格坚韧有毅力，能坚持");
+  else if (c >= 6) traits.push("性格温和有耐心");
+  else traits.push("性格随和，不喜欢给自己压力");
+
+  // D维度分析（隐性偏好）
+  if (d >= 10) traits.push("对宠物有很深的精神期待");
+  else if (d >= 6) traits.push("对养宠持理性开放态度");
+  else traits.push("对宠物陪伴的需求比较淡薄");
+
+  return traits.join("，");
 }
 
 export async function generatePetReport(
   petResult: string,
   dimScores: DimScores
 ): Promise<GeneratedReport> {
+  const petName = PET_NAMES[petResult] || petResult;
+  const traits = analyzeTraits(petResult, dimScores);
+
   const A_scores = JSON.stringify(dimScores.A);
   const B_scores = JSON.stringify(dimScores.B);
   const C_scores = JSON.stringify(dimScores.C);
   const D_scores = JSON.stringify(dimScores.D);
+  const totals = calcTotals(dimScores);
 
-  const prompt = `你是一位温柔且有洞察力的宠物缘分分析师。
-根据用户的测试结果，生成一份让他/她感到「说中了我」的宠物匹配报告。
+  const prompt = `你是「你的宠物缘分」平台的宠物缘分分析师，名叫小缘。
 
-用户最匹配的宠物：${petResult}
-四维测试得分分布：
+你的任务是根据用户的测试数据，生成一份**极具共鸣感、让人惊叹"说中了我"**的宠物缘分报告。
+
+## 用户数据
+- 匹配宠物：${petName}（${petResult}）
 - 生活方式（A维）各宠物得分：${A_scores}
 - 情感需求（B维）各宠物得分：${B_scores}
 - 性格特质（C维）各宠物得分：${C_scores}
 - 隐性偏好（D维）各宠物得分：${D_scores}
+- 你的${petName}总得分：${totals[petResult]}分
+- 用户性格特征：${traits}
 
-请严格按以下 JSON 格式输出，不要输出任何其他内容：
+## 报告要求
+请严格按以下JSON格式输出**所有字段**，全程用中文，语气温暖像朋友说话，有画面感，有洞察力：
+
 {
-  "typeName": "4-10个字的缘分类型名，有诗意，不要太普通",
-  "whyFit": "为什么${petResult}最适合你，结合得分特征说具体，2-3句，不要泛泛而谈",
-  "dailyScene": "描述你和${petResult}在一起的一个有画面感的日常瞬间，2-3句",
-  "reminder": "养${petResult}需要注意的一件最重要的事，1-2句，温柔但直接",
-  "keywords": ["关键词1", "关键词2", "关键词3"]
+  "typeName": "4-10字的缘分类型名，要有诗意有画面感，比如「独行侠的温柔港湾」或「晨曦里的忠诚伴侣」，不要平庸",
+  "whyFit": "分3段深入分析为什么${petName}最适合这个用户。第一段：从${petName}的角度出发描述它的性格；第二段：结合用户的四个维度得分，说出你们契合的深层原因；第三段：给出一个让人动容的情感共鸣金句。整体要有说服力，不要泛泛而谈。",
+  "dailyScene": "描述一个极具画面感的日常瞬间，用户和${petName}在一起。不需要华丽的辞藻，要真实、有温度、让人想起自己的生活。可以是：一起看日落、它蹭腿要抱、一起窝在沙发上、遛弯时的默契等。2-3句话，要有感官细节（声音/气味/触感）",
+  "reminder": "养${petName}最重要的一件事提醒，要有针对性。根据用户得分，如果是独立型宠物的得分者，要提醒不要忽视它；如果是高情感需求的用户，要提醒不要把自己的期待强加给它。温柔但直接，1-2句话，像朋友给你的一句忠告。",
+  "keywords": "3个性格标签词，每个2-4字，要像用户愿意展示在社交媒体上的个性签名，比如「内心柔软」「边界分明」「自在如风」",
+  "personalityBase": "用2-3句话描述这个用户的「性格底色」，要精准。比如：「你是一个外冷内热的人，表面独立，内心却有柔软的地方渴望被理解。你习惯用距离保护自己，却在信任的人面前会展露最真实的自己。」要有心理学质感。",
+  "prophecy": "用2-3句话描述一段「契合预言」，从${petName}的角度出发，描述你们未来相处中会有的一个深刻瞬间，像一个温柔的预言。比如：「某一天你会发现，${petName}总能在你最低落的时候，用它自己的方式默默陪伴你，那一刻你会明白，你们是彼此生命中的礼物。」要有仪式感和宿命感。"
 }
 
-要求：
-- 口吻温暖、有共鸣感，像一个懂你的朋友在说话
-- keywords 要像性格标签，用户愿意展示在分享卡片上
-- 不要说废话，每句话都有信息量
-- 全程用中文`;
+## 写作风格要求
+- 避免所有AI味、模板感
+- 每一句话都要有具体信息量，不要废话
+- 用「你」称呼用户，像懂他的朋友在说话
+- 描写要有感官细节（颜色/声音/触感/气味）
+- 整体情感温度：中偏高，既温暖治愈又不煽情
+
+请直接输出JSON，不要有其他内容。`;
 
   const response = await fetch("https://api.minimax.chat/v1/text/chatcompletion_v2", {
     method: "POST",
@@ -56,6 +127,8 @@ export async function generatePetReport(
           content: prompt,
         },
       ],
+      max_tokens: 2000,
+      temperature: 0.8,
       response_format: {
         type: "json_object",
       },
@@ -68,18 +141,20 @@ export async function generatePetReport(
   }
 
   const data = await response.json() as {
-    choices?: Array<{ messages: string }>;
+    choices?: Array<{ message?: { content?: string } }>;
     errors?: string[];
   };
 
-  const reply = data.choices?.[0]?.messages ?? data.errors?.[0] ?? '{}';
+  const reply = data.choices?.[0]?.message?.content ?? "{}";
   const parsed = JSON.parse(reply);
 
   return {
-    typeName: parsed.typeName ?? "缘分未名",
+    typeName: parsed.typeName ?? "缘分待续",
     whyFit: parsed.whyFit ?? "",
     dailyScene: parsed.dailyScene ?? "",
     reminder: parsed.reminder ?? "",
     keywords: Array.isArray(parsed.keywords) ? parsed.keywords : [],
+    personalityBase: parsed.personalityBase ?? "",
+    prophecy: parsed.prophecy ?? "",
   };
 }

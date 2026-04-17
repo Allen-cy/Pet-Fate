@@ -58,6 +58,8 @@ export async function saveReport(sessionId: string, report: any) {
       daily_scene: report.dailyScene,
       reminder: report.reminder,
       keywords: report.keywords,
+      personality_base: report.personalityBase || "",
+      prophecy: report.prophecy || "",
     })
     .select()
     .single();

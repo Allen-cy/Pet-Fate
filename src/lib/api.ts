@@ -48,6 +48,8 @@ export interface ReportResponse {
   daily_scene?: string;
   reminder?: string;
   keywords?: string[];
+  personality_base?: string;
+  prophecy?: string;
   created_at?: string;
 }
 

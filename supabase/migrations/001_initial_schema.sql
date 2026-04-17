@@ -33,6 +33,8 @@ CREATE TABLE reports (
   daily_scene TEXT,
   reminder TEXT,
   keywords TEXT[],
+  personality_base TEXT,
+  prophecy TEXT,
   created_at TIMESTAMPTZ DEFAULT now()
 );
 

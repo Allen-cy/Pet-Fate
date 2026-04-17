@@ -33,7 +33,7 @@ export function calculateScores(answers: Answer[]): DimScores {
 export type PetType = "dog" | "cat" | "rabbit" | "small" | "fish" | "bird";
 
 export function getWinningPetType(dimScores: DimScores): PetType {
-  const totals = calculateTotals(groupScores);
+  const totals = calculateTotals(dimScores);
   const sorted = Object.entries(totals).sort((a, b) => b[1] - a[1]);
 
   // If tie, prefer by A dimension score

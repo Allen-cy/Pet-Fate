@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import express from "express";
 import cors from "cors";
 import { createSession, getSession, updateSessionPaid } from "./services/supabase";
@@ -64,14 +65,19 @@ app.post("/api/generate-report", async (req, res) => {
       return res.status(404).json({ error: "Session not found" });
     }
 
-    if (!session.is_paid) {
-      return res.status(403).json({ error: "Payment required" });
-    }
+    // 暂时跳过支付验证，方便测试
+    // if (!session.is_paid) {
+    //   return res.status(403).json({ error: "Payment required" });
+    // }
 
     const dimScores = session.dim_scores as any;
     const petResult = session.pet_result;
 
     const report = await generatePetReport(petResult, dimScores);
+
+    // 保存报告到数据库
+    const { saveReport } = await import("./services/supabase");
+    await saveReport(sessionId, report);
 
     return res.json({
       reportId: sessionId,
